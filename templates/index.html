@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matplotlib Graph on PythonAnywhere</title>
+</head>
+<body>
+    <h1>Wordle Patterns and Counts for the year 2026</h1>
+    <p>Working on more ways to explore. Please visit frequently to check for updates</p>
+    <a href="https://github.com/lalitha2019/wordle_web_project">Backend code for webscraping, parsing and preparing data</a>
+    <p></p>
+    <a href="https://github.com/lalitha2019/wordle_web_project_demo_part">Copy of code for previous working demo on PythonAnywhere</a>
+    <p></p>
+    
+    <form action="/load_custom_counts" method="POST">
+        <button type="submit">Click here to see custom counts for selected dates and letters</button>
+    </form>
+
+    <div class="graph-container">
+        <img src="data:image/png;base64,{{ plot_var }}" alt="Matplotlib Graph">
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Date Input Example</title>
+</head>
+<body>
+
+    <h2>Custom Wordle Letter Counts</h2>
+
+    <form id="date_input" action="/show_custom_counts">
+        <label for="start_date">Choose a date: </label>
+        <input type="date" name='start_date' id="start_date" value={{begin_date}} min={{begin_date}}>
+
+        <label for="end_date">Choose a date: </label>
+        <input type="date" name='end_date' id="end_date" value={{last_date}} max={{last_date}}>
+        <p></p>
+        <label for="letter">Please enter an UPPER CASE letter: </label>
+        <input type="text" name="letter" id="letter" pattern=[A-Z] required>
+        <button type="submit">Plot the counts</button>
+        <!--<button type="submit" onclick="show_input()">Plot the counts</button>-->
+    </form>
+
+    <!--<p>Start date is: <span id="start_date_display">{{begin_date}}</span></p>
+    <p>End date is: <span id="end_date_display">{{last_date}}</span></p>-->
+
+    <div class="graph-container">
+        <img src="data:image/png;base64,{{ plot_var }}" alt="Matplotlib Graph">
+    </div>
+
+    <script>
+        const start_date_input = document.getElementById('start_date')
+        const end_date_input = document.getElementById('end_date')
+
+        function set_values(){
+            const first_load = JSON.parse('{{first_page_load | tojson}}')
+            const date1 = JSON.parse('{{begin_date | tojson}}')
+            const date2 = JSON.parse('{{last_date | tojson}}')
+            if (first_load == 'yes') {
+                localStorage.setItem('initial_start_date', date1)
+                localStorage.setItem('initial_end_date', date2)
+                //localStorage.setItem('initial_start_date', document.getElementById('start_date_display').textContent )
+                //localStorage.setItem('initial_end_date', document.getElementById('end_date_display').textContent )
+            }
+
+            const start_date_val = localStorage.getItem('initial_start_date')
+            const end_date_val = localStorage.getItem('initial_end_date')
+
+            const new_date1 = new Date(end_date_val)
+            end_date_input.valueAsDate = new_date1
+            end_date_input.max = new_date1.toISOString().split('T')[0]
+
+            new_date1.setDate(new_date1.getDate() - 1)
+            start_date_input.max = new_date1.toISOString().split('T')[0]
+
+            const new_date2 = new Date(start_date_val)
+            start_date_input.valueAsDate = new_date2
+            start_date_input.min = new_date2.toISOString().split('T')[0]
+
+            new_date2.setDate(new_date2.getDate() + 1)
+            end_date_input.min = new_date2.toISOString().split('T')[0]
+        }
+
+        document.addEventListener("DOMContentLoaded", set_values);
+
+        start_date_input.addEventListener("change",
+            function() {
+                const selected_start_date = start_date_input.valueAsDate
+                if(selected_start_date) {
+                    const new_start_date = new Date(selected_start_date)
+                    new_start_date.setDate(new_start_date.getDate() + 1)
+                    end_date_input.min = new_start_date.toISOString().split('T')[0]
+                }
+                else {
+                    set_values()
+                }
+
+            })
+
+            end_date_input.addEventListener("change",
+            function() {
+                const selected_end_date = end_date_input.valueAsDate
+                if(selected_end_date) {
+                    const new_end_date = new Date(selected_end_date)
+                    new_end_date.setDate(new_end_date.getDate() - 1)
+                    start_date_input.max = new_end_date.toISOString().split('T')[0]
+                }
+                else {
+                    set_values()
+                }
+            })
+       /* function show_input() {
+            // Get the value from the date input
+            const start_date_value = start_date_input.value;
+            const end_date_value = end_Date_input.value
+
+            //Display the Selected values inside the span element
+            //document.getElementById('start_date_display').textContent = start_date_value
+           // document.getElementById('end_date_display').textContent = end_date_value;
+
+        }*/
+    </script>
+
+</body>
+</html>
